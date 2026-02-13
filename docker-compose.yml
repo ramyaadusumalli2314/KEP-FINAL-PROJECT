@@ -1,34 +1,33 @@
-version: '3'
+version: "3.9"
+
 services:
+
   db:
     image: mysql:8
+    container_name: main-project-db-1
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: kepdb
-      MYSQL_USER: kepuser
-      MYSQL_PASSWORD: kep123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "${DB_PORT}:3306"
     volumes:
       - db_data:/var/lib/mysql
 
   backend:
     build: ./backend
+    container_name: main-project-backend-1
     ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/kepdb
-      SPRING_DATASOURCE_USERNAME: kepuser
-      SPRING_DATASOURCE_PASSWORD: kep123
+      - "${BACKEND_PORT}:8080"
     depends_on:
       - db
 
   frontend:
     build: ./frontend
+    container_name: main-project-frontend-1
     ports:
-      - "3000:3000"
-    environment:
-      PORT: 3000
+      - "${FRONTEND_PORT}:3000"
     depends_on:
       - backend
 
